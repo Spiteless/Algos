@@ -8,7 +8,8 @@
     "test-watch": "jest --watch",
     "build": "webpack",
     "start": "webpack-dev-server --open",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "local": "babel-node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   "homepage": "https://github.com/DillonBArevalo/blankJsSetup#readme",
   "devDependencies": {
     "@babel/core": "^7.7.7",
+    "@babel/node": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
     "babel-jest": "^24.9.0",
     "jest": "^24.9.0",
