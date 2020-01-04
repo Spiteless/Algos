@@ -1,2 +1,2 @@
-# blankJsSetup
-webpack and babel configs with jest for unit testing
+# Algos
+A repository for algorithms with tests

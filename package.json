@@ -1,7 +1,7 @@
 {
-  "name": "blankjssetup",
+  "name": "algos",
   "version": "1.0.0",
-  "description": "template for setting up small js projects",
+  "description": "A repository of algorithms and solutions (with tests)",
   "main": "index.js",
   "scripts": {
     "test": "jest",
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DillonBArevalo/blankJsSetup.git"
+    "url": "git+https://github.com/DillonBArevalo/Algos.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DillonBArevalo/blankJsSetup/issues"
+    "url": "https://github.com/DillonBArevalo/Algos/issues"
   },
-  "homepage": "https://github.com/DillonBArevalo/blankJsSetup#readme",
+  "homepage": "https://github.com/DillonBArevalo/Algos#readme",
   "devDependencies": {
     "@babel/core": "^7.7.7",
     "@babel/node": "^7.7.7",
