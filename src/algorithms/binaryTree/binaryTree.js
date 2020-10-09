@@ -2,8 +2,16 @@
 
 export default class BinaryTree {
   constructor(root) {
-    this._validate(root);
-    this._rootNode = root;
+    this.root = root;
+  }
+
+  get root () {
+    return this._root;
+  }
+
+  set root(newRoot) {
+    this._validate(newRoot);
+    this._root = newRoot
   }
 
   _validate (root) {
@@ -16,8 +24,13 @@ export default class BinaryTree {
 }
 
 export class Node {
-  constructor (value) {
+  constructor (value, parent, children = []) {
+    if (!value) {
+      throw new Error('Node must have a value');
+    }
     this.value = value;
-    this.children = [];
+    this.children = children;
+    this.parent = parent;
   }
+
 }
