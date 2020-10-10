@@ -31,13 +31,36 @@ describe('Node', () => {
     const node = new Node('value');
     expect(node.value).toBe('value');
   });
-  test('Must be initialized with a value', () => {
-    expect(() => new Node()).toThrowError('Node must have a value');
+  test('Can be initialized with a value of false', () => {
+    const node = new Node(false);
+    expect(node.value).toBe(false);
   });
-  test('Can be initialized with a parent', () => {
+  test('Can be initialized with a value of null', () => {
+    const node = new Node(null);
+    expect(node.value).toBe(null);
+  });
+  test('cannot be initialized with an undefined value', () => {
+    expect(() => new Node()).toThrowError('Node value cannot be undefined');
+  });
+  test('Can be initialized with a parent of type Node', () => {
     const parent = new Node('parent');
     const node = new Node('value', parent);
     expect(node.parent).toBe(parent);
   });
-  test('Can be initialized with children', () => {});
+  test('When initialized without a parent, parent property returns null', () => {
+    const node = new Node('value');
+    expect(node.parent).toBe(null);
+  });
+  test('When initialized with parent as null, parent property returns null', () => {
+    const node = new Node('value', undefined);
+    expect(node.parent).toBe(null);
+  });
+  test('When initialized with parent as undefined, parent property returns null', () => {
+    const node = new Node('value', null);
+    expect(node.parent).toBe(null);
+  });
+  test('cannot be initialized with a non Node, non null or undefined parent', () => {
+    expect(() => {new Node('value', 'a parent');}).toThrowError('Node parent must be an instance of Node');
+  });
+  xtest('Can be initialized with children', () => {});
 });
