@@ -62,5 +62,24 @@ describe('Node', () => {
   test('cannot be initialized with a non Node, non null or undefined parent', () => {
     expect(() => {new Node('value', 'a parent');}).toThrowError('Node parent must be an instance of Node');
   });
-  xtest('Can be initialized with children', () => {});
+  test('Cannot be initialized with children as a non array value', () => {
+    expect(() => {new Node('value', null, 'non array!');}).toThrowError('Children must be an array');
+  });
+  test('Cannot be initialized with non Node children', () => {
+    const childNode = new Node('a');
+    expect(() => {new Node('value', null, ['a', childNode]);}).toThrowError('Children must all be instances of Node');
+    expect(() => {new Node('value', null, [childNode, 'a']);}).toThrowError('Children must all be instances of Node');
+  });
+  test('Can be initialized with children as an empty array', () => {
+    const children = [];
+    const node = new Node('value', null, children);
+    expect(node.children).toBe(children);
+  });
+  test('Can be initialized with children as an array of Nodes', () => {
+    const children = [new Node('a'), new Node('b')];
+    const node = new Node('value', null, children);
+    expect(node.children).toBe(children);
+  });
+  // how much do I actually want to control this? is it better to let the actual array be passed
+  xtest('Children array cannot be mutated', () => {})
 });

@@ -51,4 +51,27 @@ export class Node {
     return null;
   }
 
+  // could make this iterate through the array and run addChild. notably, this would mean that it wouldnt use the original array
+  set children (newChildren) {
+    if (!Array.isArray(newChildren)) {
+      throw new Error('Children must be an array');
+    } else if (!newChildren.every(node => node instanceof Node)) {
+      throw new Error('Children must all be instances of Node')
+    }
+    this._children = newChildren;
+  }
+
+  // if i actually want to not allow it to be mutated i would have to return a new array
+  get children () {
+    return this._children;
+  }
+
+  // this can be used to validate that an array contains the same items as the node's children (in the same order)
+  hasChildren (children) {
+
+  }
+
+  addChild (node) {
+
+  }
 }
