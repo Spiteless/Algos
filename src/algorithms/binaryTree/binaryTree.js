@@ -71,7 +71,20 @@ export class Node {
 
   }
 
-  addChild (node) {
+  isChild (node) {
+    return this.children.includes(node);
+  }
 
+  addChild (child, index=-1) {
+    if (!(child instanceof Node)) {
+      throw new Error('Child must be an instance of Node');
+    } else if(typeof index !== 'number' || index < -1 || index > this.children.length) {
+      throw new Error('Index must be a vaild index or -1');
+    }
+    child.parent = this;
+    if (this.isChild(child)) {
+      this._children.splice(this.children.indexOf(child), 1);
+    }
+    index === -1 ? this._children.push(child) : this._children.splice(index, 0, child);
   }
 }
