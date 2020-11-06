@@ -32,18 +32,18 @@ describe('Node', () => {
       const node = new Node('value');
       expect(node.value).toBe('value');
     });
-    test('Can be initialized with a value of false', () => {
+    test('can be initialized with a value of false', () => {
       const node = new Node(false);
       expect(node.value).toBe(false);
     });
-    test('Can be initialized with a value of null', () => {
+    test('can be initialized with a value of null', () => {
       const node = new Node(null);
       expect(node.value).toBe(null);
     });
     test('cannot be initialized with an undefined value', () => {
       expect(() => new Node()).toThrowError('Node value cannot be undefined');
     });
-    test('Can be initialized with a parent of type Node', () => {
+    test('can be initialized with a parent of type Node', () => {
       const parent = new Node('parent');
       const node = new Node('value', parent);
       expect(node.parent).toBe(parent);
@@ -63,26 +63,26 @@ describe('Node', () => {
     test('cannot be initialized with a non Node, non null or undefined parent', () => {
       expect(() => {new Node('value', 'a parent');}).toThrowError('Node parent must be an instance of Node');
     });
-    test('Cannot be initialized with children as a non array value', () => {
+    test('cannot be initialized with children as a non array value', () => {
       expect(() => {new Node('value', null, 'non array!');}).toThrowError('Children must be an array');
     });
-    test('Cannot be initialized with non Node children', () => {
+    test('cannot be initialized with non Node children', () => {
       const childNode = new Node('a');
       expect(() => {new Node('value', null, ['a', childNode]);}).toThrowError('Children must all be instances of Node');
       expect(() => {new Node('value', null, [childNode, 'a']);}).toThrowError('Children must all be instances of Node');
     });
-    test('Can be initialized with children as an empty array', () => {
+    test('can be initialized with children as an empty array', () => {
       const children = [];
       const node = new Node('value', null, children);
-      expect(node.children).toBe(children);
+      expect(node.children).toStrictEqual(children);
     });
-    test('Can be initialized with children as an array of Nodes', () => {
+    test('can be initialized with children as an array of Nodes', () => {
       const children = [new Node('a'), new Node('b')];
       const node = new Node('value', null, children);
-      expect(node.children).toBe(children);
+      expect(node.children).toStrictEqual(children);
     });
   });
-  describe('node.isChild', () => {
+  describe('node.isChild()', () => {
     it('returns true if the argument is a child of the node', () => {
       const child = new Node('child');
       const parent = new Node('parent', null, [child]);
@@ -95,7 +95,7 @@ describe('Node', () => {
       expect(parent.isChild(notChild)).toBe(false);
     });
   });
-  describe('node.addChild', () => {
+  describe('node.addChild()', () => {
     let parent;
     let child;
     beforeEach(() => {
@@ -139,15 +139,128 @@ describe('Node', () => {
     it('does not change the length of children if node is already a child', () => {
       const nodeWithChildren = new Node('value', null, [child]);
       nodeWithChildren.addChild(child);
-      expect(nodeWithChildren.children.length).toBe(1);
+      expect(nodeWithChildren.children).toHaveLength(1);
     });
     it('moves the index of the child if it is already a child of the node', () => {
       const nodeWithChildren = new Node('value', null, [child, new Node('a'), new Node('b'), new Node('c')]);
       nodeWithChildren.addChild(child, 2);
       expect(nodeWithChildren.children[2]).toBe(child);
     });
+    it('cannot add itself as a child', () => {
+      expect(() => parent.addChild(parent)).toThrowError('Node cannot be a child to itself');
+    });
   });
-  xdescribe('getters and setters', () => {});
-  // how much do I actually want to control this? is it better to let the actual array be passed
-  xtest('Children array cannot be mutated', () => {})
+  describe('node.clearChildren()', () => {
+    let parent;
+    let children;
+    beforeEach(() => {
+      children = [new Node('a'), new Node('b')];
+      parent = new Node('foo', null, children);
+    });
+    it('sets the parent to null on all previous children', () => {
+      parent.clearChildren();
+      children.forEach((child) => expect(child.parent).toBe(null));
+    });
+    it('sets the length of the node\'s "children" property to 0', () => {
+      parent.clearChildren();
+      expect(parent.children).toHaveLength(0);
+    });
+  });
+  describe('node.removeChild', () => {
+    let child;
+    let parent;
+    beforeEach(() => {
+      child = new Node('foo');
+      parent = new Node('bar', null, [child]);
+    });
+    it('returns false if the argument is not a child', () => {
+      expect(parent.removeChild(new Node('baz'))).toBe(false);
+    });
+    it('does not alter the length of the children property if argument is not a child', () => {
+      const startingLength = parent.children.length;
+      parent.removeChild(new Node('baz'));
+      const endingLength = parent.children.length;
+      expect(startingLength).toBe(endingLength);
+    });
+    it('reduces the length of the children property  by 1 if the node is a child', () => {
+      const startingLength = parent.children.length;
+      parent.removeChild(child);
+      const endingLength = parent.children.length;
+      expect(startingLength).toBe(endingLength + 1);
+    });
+    it('returns true if the node is a child', () => {
+      expect(parent.removeChild(child)).toBe(true);
+    });
+    it('removes the child from the children property', () => {
+      parent.removeChild(child);
+      expect(parent.children).not.toContain(child);
+    });
+    it('sets the child\'s parent property to null', () => {
+      parent.removeChild(child);
+      expect(child.parent).not.toBe(parent);
+    });
+  });
+  describe('getters and setters', () => {
+    describe('.children', () => {
+      let node;
+      beforeEach(() => {
+        node = new Node('value', null, [new Node('a'), new Node('b'), new Node('c')]);
+      });
+      test('Children array cannot be mutated', () => {
+        const children = node.children;
+        children.push('foo');
+        expect(node.children).toHaveLength(3);
+      });
+      test('children cannot be mutated by mutating the array used to set them', () => {
+        const newNode = new Node('value');
+        const children = [new Node('e'), new Node('f'), new Node('g')];
+        newNode.children = children;
+        children.push(new Node('foo'));
+        expect(node.children).not.toHaveLength(4);
+      });
+      test('new children array after setting is deep equal to array used to set', () => {
+        const newNode = new Node('value');
+        const children = [new Node('e'), new Node('f'), new Node('g')];
+        newNode.children = children;
+        expect(newNode.children).toStrictEqual(children);
+      });
+      test('Cannot be set with children as a non array value', () => {
+        expect(() => {node.children = 'foo';}).toThrowError('Children must be an array');
+      });
+      test('Cannot be set with non Node children', () => {
+        const childNode = new Node('e');
+        expect(() => {node.children = ['a', childNode];}).toThrowError('Children must all be instances of Node');
+        expect(() => {node.children = [childNode, 'a'];}).toThrowError('Children must all be instances of Node');
+      });
+      test('Can be set with children as an empty array', () => {
+        const children = [];
+        node.children = children;
+        expect(node.children).toStrictEqual(children);
+      });
+      test('Can be set with children as an array of Nodes', () => {
+        const children = [new Node('e'), new Node('f')];
+        node.children = children;
+        expect(node.children).toStrictEqual(children);
+      });
+    });
+    describe('parent', () => {
+      let parent;
+      let child;
+      beforeEach(() => {
+        parent = new Node('foo');
+        child = new Node('bar');
+      });
+      it('sets the parent to the parent property', () => {
+        child.parent = parent;
+        expect(child.parent).toBe(parent);
+      });
+      it('errors if the parent is not a node', () => {
+        expect(() => {child.parent = 'foo';}).toThrowError('Node parent must be an instance of Node');
+      });
+      it('adds the node to the end of the parent\'s child list', () => {
+        child.parent = parent;
+        expect(parent.children[parent.children.length - 1]).toBe(child);
+      });
+    });
+  });
 });
