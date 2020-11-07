@@ -166,7 +166,7 @@ describe('Node', () => {
       expect(parent.children).toHaveLength(0);
     });
   });
-  describe('node.removeChild', () => {
+  describe('node.removeChild()', () => {
     let child;
     let parent;
     beforeEach(() => {
@@ -260,6 +260,12 @@ describe('Node', () => {
       it('adds the node to the end of the parent\'s child list', () => {
         child.parent = parent;
         expect(parent.children[parent.children.length - 1]).toBe(child);
+      });
+    });
+    describe('value', () => {
+      it('cannot be set to undefined', () => {
+        const node = new Node('foo');
+        expect(() => {node.value = undefined;}).toThrowError('Node value cannot be undefined');
       });
     });
   });

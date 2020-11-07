@@ -61,7 +61,6 @@ export class Node {
     return null;
   }
 
-  // could make this iterate through the array and run addChild. notably, this would mean that it wouldnt use the original array
   set children (newChildren) {
     if (!Array.isArray(newChildren)) {
       throw new Error('Children must be an array');
@@ -72,7 +71,6 @@ export class Node {
     newChildren.forEach(child => this.addChild(child));
   }
 
-  // if i actually want to not allow it to be mutated i would have to return a new array
   get children () {
     return Array.from(this[_children] || []);
   }
