@@ -47,11 +47,13 @@ export class Node {
     if (newParent !== undefined && newParent !== null && !(newParent instanceof Node)) {
       throw new Error('Node parent must be an instance of Node');
     }
+    if (this[_parent] && this[_parent] !== newParent) {
+      this[_parent].removeChild(this);
+    }
     this[_parent] = newParent;
     if (newParent && !newParent.isChild(this)) {
       newParent.addChild(this);
     }
-
   }
 
   get parent () {
@@ -87,7 +89,7 @@ export class Node {
   removeChild (child) {
     const childIndex = this.children.indexOf(child);
     if (childIndex >= 0) {
-      child.parent = null;
+      child[_parent] = null;
       this[_children].splice(childIndex, 1);
       return true;
     }
@@ -103,7 +105,7 @@ export class Node {
       throw new Error('Node cannot be a child to itself')
     }
     if (this.isChild(child)) {
-      this[_children].splice(this.children.indexOf(child), 1);
+      this[_children].splice(this[_children].indexOf(child), 1);
     }
     index === -1 ? this[_children].push(child) : this[_children].splice(index, 0, child);
     if(child.parent !== this) {

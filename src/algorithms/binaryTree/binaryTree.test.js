@@ -261,6 +261,11 @@ describe('Node', () => {
         child.parent = parent;
         expect(parent.children[parent.children.length - 1]).toBe(child);
       });
+      it('removes the child from the previous parent\'s list of children', () => {
+        child.parent = parent;
+        child.parent = new Node('baz');
+        expect(parent.children).toHaveLength(0);
+      });
     });
     describe('value', () => {
       it('cannot be set to undefined', () => {
