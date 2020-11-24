@@ -5,6 +5,9 @@
 *     this.next = (next===undefined ? null : next)
 * }
 */
+
+import ListNode from "./ListNode";
+
 /**
  * @param {ListNode} l1
  * @param {ListNode} l2
@@ -31,12 +34,34 @@ const addTwoNumbers = function (l1, l2) {
     return output
 };
 
+const listNodeTwoNumbers = (l1, l2) => {
+    let output = new ListNode((l1.val + l2.val) % 10) // does't cover carry
+    let n1 = l1.next
+    let n2 = l2.next
 
+    let carry = (l1.val + l2.val) > 9
 
+    let tail = output
+
+    while (!!n1 || !!n2 || carry) {
+        let sum = (n1 ? n1.val : 0) + (n2 ? n2.val : 0) + (carry ? 1 : 0);
+        carry = sum > 9;
+        tail.next = new ListNode(sum % 10);
+        
+        n1 = (!!n1 && n1.next ? n1.next : null)
+        n2 = (!!n2 && n2.next ? n2.next : null)
+
+        tail = tail.next;
+    }
+
+    return output;
+}
+
+export {listNodeTwoNumbers}
 export default addTwoNumbers
 
 //
-//  complet with ListNode next time
+//  complete with ListNode next time
 //  will need to make ListNode object
 //  and maybe test listnode but hey, who knows
 
